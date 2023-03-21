@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Avatar } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
+import { BASE_URL } from "../components/api";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
@@ -14,14 +15,11 @@ const ProfileScreen = ({ navigation }) => {
     const getUser = async () => {
       try {
         const userToken = await AsyncStorage.getItem("token");
-        const response = await fetch(
-          "https://task-manager-production-872a.up.railway.app/users/me",
-          {
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-            },
-          }
-        );
+        const response = await fetch(`${BASE_URL}/users/logout`, {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
         const data = await response.json();
         console.log(data);
         setUser(data);
@@ -36,15 +34,15 @@ const ProfileScreen = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       const userToken = await AsyncStorage.getItem("token");
-      await fetch(
-        "https://task-manager-production-872a.up.railway.app/users/logout",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      await fetch(`${BASE_URL}/users/me`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: {
+          deviceToken: await AsyncStorage.getItem("deviceToken"),
+        },
+      });
       await AsyncStorage.removeItem("token");
       navigation.navigate("Login");
     } catch (error) {

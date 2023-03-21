@@ -149,7 +149,7 @@
 // });
 
 // export default AddTaskScreen;
-
+import { BASE_URL } from "../components/api";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -196,11 +196,7 @@ const AddTaskScreen = ({ navigation }) => {
       completed: false,
     };
     try {
-      const res = await axios.post(
-        "https://task-manager-production-872a.up.railway.app/tasks",
-        newTask,
-        config
-      );
+      const res = await axios.post(`${BASE_URL}/tasks`, newTask, config);
       navigation.navigate("TaskList");
     } catch (err) {
       console.log(err);

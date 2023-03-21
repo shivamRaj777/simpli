@@ -212,29 +212,29 @@
 // });
 
 // export default UpdateProfileScreen;
+import { BASE_URL } from "../components/api";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, Button, Alert, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const UpdateProfileScreen = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [age, setAge] = useState('');
+const UpdateProfileScreen = ({ navigation }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const token = await AsyncStorage.getItem('token');
-      const response = await fetch('https://task-manager-production-872a.up.railway.app/users/me', {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${BASE_URL}/users/me`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        Alert.alert('Error', errorData.error);
+        Alert.alert("Error", errorData.error);
         return;
       }
 
@@ -249,7 +249,7 @@ const UpdateProfileScreen = ({navigation}) => {
   }, []);
 
   const handleUpdateProfile = async () => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem("token");
     const updates = {};
 
     if (name) {
@@ -268,28 +268,31 @@ const UpdateProfileScreen = ({navigation}) => {
       updates.age = age;
     }
 
-    const response = await fetch('https://task-manager-production-872a.up.railway.app/users/me', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(updates),
-    });
+    const response = await fetch(
+      "https://task-manager-production-872a.up.railway.app/users/me",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
-      Alert.alert('Error', errorData.error);
+      Alert.alert("Error", errorData.error);
       return;
     }
 
     const updatedUser = await response.json();
-    Alert.alert('Success', 'Profile updated successfully!');
+    Alert.alert("Success", "Profile updated successfully!");
     setName(updatedUser.name);
     setEmail(updatedUser.email);
     setPassword(updatedUser.password);
     setAge(updatedUser.age);
-    navigation.navigate('Profile')
+    navigation.navigate("Profile");
   };
 
   return (
@@ -318,10 +321,7 @@ const UpdateProfileScreen = ({navigation}) => {
         onChangeText={setAge}
         style={styles.input}
       />
-      <Button
-        title="Update Profile"
-        onPress={handleUpdateProfile}
-      />
+      <Button title="Update Profile" onPress={handleUpdateProfile} />
     </View>
   );
 };
@@ -329,26 +329,26 @@ const UpdateProfileScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
     padding: 20,
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
-    width: '100%',
+    width: "100%",
   },
   error: {
-    color: 'red',
+    color: "red",
     marginBottom: 20,
   },
 });

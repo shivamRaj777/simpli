@@ -383,6 +383,7 @@
 // export default TaskListScreen;
 
 //
+import { BASE_URL } from "../components/api";
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, BackHandler } from "react-native";
 import {
@@ -401,14 +402,11 @@ const TaskListScreen = () => {
   const fetchTaskList = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch(
-        "https://task-manager-production-872a.up.railway.app/tasks",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/tasks`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch task list");
       }

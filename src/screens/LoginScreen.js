@@ -10,27 +10,32 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "../components/api";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
+    const deviceToken = await AsyncStorage.getItem("deviceToken");
+    console.log(deviceToken);
+
     try {
-      const response = await axios.post(
-        "https://task-manager-production-872a.up.railway.app/users/login",
-        {
-          email: email,
-          password: password,
-        }
-      );
-      const token = response.data.token;
+      const response = await axios.post(`${BASE_URL}/users/login`, {
+        email: email,
+        password: password,
+        deviceToken,
+      });
+      const token = response.data.token ? response.data.token : "";
       await AsyncStorage.setItem("token", token);
       navigation.navigate("TaskList");
     } catch (error) {
       console.error(error);
     }
   };
+
   const areAllFieldsFilleds = email != "" && password.length >= 7;
   return (
     <View style={styles.container}>

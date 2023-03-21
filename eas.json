@@ -4,6 +4,13 @@
   },
 
   "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m1-medium"
+      }
+    },
     "preview": {
       "android": {
         "buildType": "apk"

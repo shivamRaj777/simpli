@@ -28,6 +28,24 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon1.png",
+          "color": "#ffffff",
+          "androidMode": "default"
+        }
+      ]
+    ],
+    "notification": {
+      "icon": "./local/assets/notification-icon.png",
+      "color": "#ffffff",
+      "androidMode": "default",
+      "androidCollapsedTitle": "${notification.title}",
+      "androidIcon": "./local/assets/notification-icon.png",
+      "androidNotificationPriority": "max"
+    },
     "extra": {
       "eas": {
         "projectId": "fcf5f17d-ebb8-4e34-87d3-3c729209b43a"

@@ -415,7 +415,7 @@
 //         <Picker.Item label="Normal" value="normal" />
 //         <Picker.Item label="Low" value="low" />
 //       </Picker>
-      
+
 //       <Button title="Save Changes" onPress={handleUpdateTask} />
 //     </View>
 //   );
@@ -442,12 +442,21 @@
 
 // export default UpdateTaskScreen;
 
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Picker } from '@react-native-picker/picker';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Picker } from "@react-native-picker/picker";
+import { useNavigation } from "@react-navigation/native";
+import { BASE_URL } from "../components/api";
 
 const UpdateTaskScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -459,7 +468,7 @@ const UpdateTaskScreen = ({ route }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const handleUpdateTask = async () => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem("token");
     const updates = {};
 
     if (title) {
@@ -478,10 +487,10 @@ const UpdateTaskScreen = ({ route }) => {
       updates.dueDate = dueDate.toISOString();
     }
 
-    const response = await fetch(`https://task-manager-production-872a.up.railway.app/tasks/${task._id}`, {
-      method: 'PATCH',
+    const response = await fetch(`${BASE_URL}/tasks/${task._id}`, {
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(updates),
@@ -489,12 +498,12 @@ const UpdateTaskScreen = ({ route }) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      Alert.alert('Error', errorData.error);
+      Alert.alert("Error", errorData.error);
       return;
     }
 
     const updatedTask = await response.json();
-    Alert.alert('Success', 'Task updated successfully!');
+    Alert.alert("Success", "Task updated successfully!");
     setTitle(updatedTask.title);
     setDescription(updatedTask.description);
     setDueDate(new Date(updatedTask.dueDate));
@@ -521,11 +530,20 @@ const UpdateTaskScreen = ({ route }) => {
       <TextInput style={styles.input} value={title} onChangeText={setTitle} />
 
       <Text style={styles.label}>Task Description</Text>
-      <TextInput style={styles.input} value={description} onChangeText={setDescription} />
+      <TextInput
+        style={styles.input}
+        value={description}
+        onChangeText={setDescription}
+      />
 
       <Text style={styles.label}>Due Date</Text>
-      <TouchableOpacity style={styles.datePickerButton} onPress={showDatePicker}>
-        <Text style={styles.datePickerButtonText}>{dueDate.toLocaleString()}</Text>
+      <TouchableOpacity
+        style={styles.datePickerButton}
+        onPress={showDatePicker}
+      >
+        <Text style={styles.datePickerButtonText}>
+          {dueDate.toLocaleString()}
+        </Text>
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -536,7 +554,11 @@ const UpdateTaskScreen = ({ route }) => {
       />
 
       <Text style={styles.label}>Priority</Text>
-      <Picker style={styles.picker} selectedValue={priority} onValueChange={setPriority}>
+      <Picker
+        style={styles.picker}
+        selectedValue={priority}
+        onValueChange={setPriority}
+      >
         <Picker.Item label="High" value="high" />
         <Picker.Item label="Medium" value="medium" />
         <Picker.Item label="Low" value="low" />
@@ -554,13 +576,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 20,
     marginBottom: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     padding: 10,
     marginBottom: 20,
   },

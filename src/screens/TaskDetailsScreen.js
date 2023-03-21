@@ -182,7 +182,7 @@
 // });
 
 // export default TaskDetailScreen;
-
+import { BASE_URL } from "../components/api";
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import {
@@ -203,15 +203,12 @@ const TaskDetailsScreen = ({ route }) => {
   const fetchTaskDetails = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch(
-        `https://task-manager-production-872a.up.railway.app/tasks/${task._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/tasks/${task._id}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch task details");
       }
@@ -225,17 +222,14 @@ const TaskDetailsScreen = ({ route }) => {
   const updateTaskStatus = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch(
-        `https://task-manager-production-872a.up.railway.app/tasks/${task._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ completed }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/tasks/${task._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ completed }),
+      });
       if (!response.ok) {
         throw new Error("Failed to update task status");
       }

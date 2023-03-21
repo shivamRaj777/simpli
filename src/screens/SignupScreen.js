@@ -79,7 +79,7 @@
 // });
 
 // export default SignUpScreen;
-
+import { BASE_URL } from "../components/api";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -98,20 +98,18 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch(
-        "https://task-manager-production-872a.up.railway.app/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-          }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          deviceToken: await AsyncStorage.getItem("deviceToken"),
+        }),
+      });
       const data = await response.json();
       if (data.token) {
         await AsyncStorage.setItem("token", data.token);
